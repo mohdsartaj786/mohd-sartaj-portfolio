@@ -1,4 +1,3 @@
-/* ================= NAVBAR TOGGLE ================= */
 const hamburger = document.querySelector(".hamburger");
 const navMenu = document.querySelector(".nav-menu");
 
@@ -7,7 +6,6 @@ hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("active");
 });
 
-/* CLOSE MENU ON LINK CLICK */
 document.querySelectorAll(".nav-menu a").forEach(link => {
     link.addEventListener("click", () => {
         navMenu.classList.remove("active");
@@ -15,7 +13,6 @@ document.querySelectorAll(".nav-menu a").forEach(link => {
     });
 });
 
-/* ================= SMOOTH SCROLL ================= */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener("click", function(e) {
         e.preventDefault();
@@ -24,12 +21,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-/* ================= ACTIVE NAV LINK ================= */
 const sections = document.querySelectorAll("section");
 const navLinks = document.querySelectorAll(".nav-menu a");
 
 window.addEventListener("scroll", () => {
     let current = "";
+
     sections.forEach(section => {
         const sectionTop = section.offsetTop - 120;
         if (scrollY >= sectionTop) current = section.getAttribute("id");
@@ -37,24 +34,32 @@ window.addEventListener("scroll", () => {
 
     navLinks.forEach(a => {
         a.classList.remove("active");
-        if (a.getAttribute("href") === `#${current}`) a.classList.add("active");
+        if (a.getAttribute("href") === `#${current}`) {
+            a.classList.add("active");
+        }
     });
 
-    // NAVBAR SHADOW
     const navbar = document.querySelector(".navbar");
-    navbar.style.boxShadow = window.scrollY > 50 ? "0 5px 20px rgba(0,0,0,0.5)" : "none";
+    navbar.style.boxShadow = window.scrollY > 50 
+        ? "0 5px 20px rgba(0,0,0,0.5)" 
+        : "none";
 });
 
-/* ================= DARK MODE ================= */
 const toggle = document.getElementById("themeToggle");
-if (localStorage.getItem("theme") === "light") document.body.classList.add("light");
+
+if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light");
+}
 
 toggle.onclick = () => {
     document.body.classList.toggle("light");
-    localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("light") ? "light" : "dark"
+    );
 };
 
-/* ================= TYPING EFFECT ================= */
 const words = ["Full Stack Developer", "Web Designer", "React Developer"];
 let i = 0, j = 0, currentWord = "", isDeleting = false;
 
@@ -62,8 +67,11 @@ function typeEffect() {
     const el = document.getElementById("typing");
     if (!el) return;
 
-    if (!isDeleting && j <= words[i].length) currentWord = words[i].substring(0, j++);
-    else if (isDeleting && j >= 0) currentWord = words[i].substring(0, j--);
+    if (!isDeleting && j <= words[i].length) {
+        currentWord = words[i].substring(0, j++);
+    } else if (isDeleting && j >= 0) {
+        currentWord = words[i].substring(0, j--);
+    }
 
     el.innerHTML = currentWord;
 
@@ -73,14 +81,16 @@ function typeEffect() {
         i = (i + 1) % words.length;
     }
 
-    setTimeout(typeEffect, isDeleting ? 50 : 150);
+    setTimeout(typeEffect, isDeleting ? 50 : 120);
 }
+
 typeEffect();
 
-/* ================= SCROLL ANIMATION ================= */
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("show");
+        if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+        }
     });
 }, { threshold: 0.2 });
 
@@ -90,7 +100,6 @@ document.querySelectorAll(".project-card, .about, .skills, .tools, .contact, .ed
         observer.observe(el);
     });
 
-/* ================= AI CHATBOT ================= */
 function toggleChat() {
     const chat = document.getElementById("chatBody");
     chat.style.display = chat.style.display === "block" ? "none" : "block";
@@ -99,9 +108,11 @@ function toggleChat() {
 function sendMessage() {
     const input = document.getElementById("userInput");
     const msg = input.value.trim().toLowerCase();
+
     if (!msg) return;
 
     const box = document.getElementById("chatMessages");
+
     box.innerHTML += `<div><b>You:</b> ${msg}</div>`;
 
     let reply = "Sorry, I didn't understand 😅";
@@ -111,7 +122,7 @@ function sendMessage() {
     else if (msg.includes("project")) reply = "I have built portfolio, todo, weather, blog, ecommerce, and full-stack websites.";
     else if (msg.includes("contact")) reply = "You can contact me via email or LinkedIn.";
     else if (msg.includes("resume")) reply = "You can download my resume from the button above 👆";
-    else if (msg.includes("education")) reply = "I completed 10th from Nobel Senior Secondary School, 12th from S.K.B.M Inter College, and currently pursuing BCA from Microtek College of Management and Technology.";
+    else if (msg.includes("education")) reply = "I completed 10th from Nobel Senior Secondary School, 12th from S.K.B.M Inter College, and currently pursuing BCA.";
 
     box.innerHTML += `<div><b>Bot:</b> ${reply}</div>`;
 
@@ -123,19 +134,42 @@ document.getElementById("userInput").addEventListener("keypress", function(e) {
     if (e.key === "Enter") sendMessage();
 });
 
-/* ================= CONTACT FORM (EmailJS) ================= */
 const contactForm = document.getElementById("contactForm");
+
 if (contactForm) {
     contactForm.addEventListener("submit", function(e) {
         e.preventDefault();
 
-        emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this, 'YOUR_USER_ID')
-            .then(() => {
-                alert("Message sent successfully! ✅");
-                contactForm.reset();
-            }, (err) => {
-                alert("Failed to send message. ❌ Please try again later.");
-                console.error(err);
-            });
+        const btn = contactForm.querySelector("button");
+        const formMessage = document.getElementById("formMessage");
+
+        btn.innerText = "Sending...";
+        btn.disabled = true;
+
+        formMessage.innerHTML = "";
+
+        emailjs.sendForm(
+            "service_fa1ltrt",  
+            "template_u20dllh", 
+            this
+        )
+        .then(() => {
+            formMessage.innerHTML = "✅ Message Sent Successfully!";
+            formMessage.style.color = "lightgreen";
+
+            btn.innerText = "Send Message";
+            btn.disabled = false;
+
+            contactForm.reset();
+        })
+        .catch((error) => {
+            formMessage.innerHTML = "❌ Failed to send message";
+            formMessage.style.color = "red";
+
+            btn.innerText = "Send Message";
+            btn.disabled = false;
+
+            console.error(error);
+        });
     });
 }
